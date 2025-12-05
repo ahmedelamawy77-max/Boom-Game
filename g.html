@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BUM Game</title>
+    <link rel="stylesheet" href="g.css">
+    <style>body {
+    margin: 0;
+    background: linear-gradient(135deg, #8fd3f4, #84fab0);
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* الصندوق */
+#container {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    width: 300px;
+    text-align: center;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+}
+
+/* العنوان */
+h1 {
+    margin: 0 0 10px;
+}
+
+/* الوصف */
+.desc {
+    margin-bottom: 20px;
+    color: #555;
+}
+
+/* انبوت */
+input {
+    width: 80%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 2px solid #6c63ff;
+    outline: none;
+    font-size: 16px;
+}
+
+/* زرار */
+button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    border-radius: 8px;
+    background: #6c63ff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+button:hover {
+    background: #5148e5;
+}
+
+/* الرسالة */
+#message {
+    margin-top: 15px;
+    font-weight: bold;
+    min-height: 30px;
+}
+
+/* العداد */
+#counter {
+    margin-top: 10px;
+    font-size: 18px;
+    padding: 8px;
+    background: #f3f3f3;
+    border-radius: 10px;
+}
+
+/* صندوق الأنيميشن */
+#animBox {
+    margin-top: 20px;
+    width: 120px;
+    height: 120px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 15px;
+}
+
+/* أنيميشن Boom */
+.boom {
+    background: red;
+    animation: boomAnim .6s;
+}
+@keyframes boomAnim {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.5); opacity: .5; }
+    100% { transform: scale(0); opacity: 0; }
+}
+
+/* Safe */
+.safe {
+    background: green;
+    animation: safeAnim .6s;
+}
+@keyframes safeAnim {
+    0% { opacity: 0; transform: scale(.5); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+/* Angry */
+.angry {
+    background: yellow;
+    animation: angryAnim .6s;
+}
+@keyframes angryAnim {
+    0% { transform: rotate(0deg); }
+    50% { transform: rotate(12deg); }
+    100% { transform: rotate(-12deg); }
+}
+</style>
+</head>
+<body>
+
+    <div id="container">
+        <h1>BUM NUMBER 🤭</h1>
+        <p class="desc">Thinking of a number between 1 and 100</p>
+
+        <input type="text" id="inputg" placeholder="Your number">
+        <button onclick="button()">Guess</button>
+
+        <p id="message"></p>
+
+        <p id="counter">Safe: 0 | Boom: 0</p>
+
+        <div id="animBox"></div>
+    </div>
+
+    <audio id="winSound" src="safe.mp3"></audio>
+<audio id="loseSound" src="boom.mp3"></audio>
+
+    <script src="g.js">let safeCount = 0;
+let boomCount = 0;
+
+function button() {
+    let i = document.getElementById("inputg").value;
+    let msg = document.getElementById("message");
+    let anim = document.getElementById("animBox");
+    let counter = document.getElementById("counter");
+
+    let winSound = document.getElementById("winSound");
+    let loseSound = document.getElementById("loseSound");
+
+    let animationClass = "";
+
+    anim.className = "";
+    void anim.offsetWidth;
+
+    if (i < 1 || i > 100) {
+        msg.innerText = "Write NOWWWWWW 🤬";
+        animationClass = "angry";
+    }
+    else if ([2, 90, 10, 80, 79, 3, 77, 99, 66, 22, 54, 45, 14, 6, 11, 7, 20, 55, 50, 44].includes(Number(i))) {
+        msg.innerText = "Save Save 👌";
+        animationClass = "safe";
+        safeCount++;
+    }
+    else {
+        msg.innerText = "BUMMMMMMMM 🤣";
+        animationClass = "boom";
+        boomCount++;
+    }
+
+    anim.classList.add(animationClass);
+
+    counter.innerText = `Safe: ${safeCount} | Boom: ${boomCount}`;
+
+    // تحقق من الفوز أو الخسارة
+    if (safeCount >= 5) {
+        msg.innerText = "YOU WINNNNN 🎉🔥";
+        anim.className = "safe";
+
+        // تشغيل صوت الفوز
+        winSound.play();
+
+        // إعادة العدّاد
+        safeCount = 0;
+        boomCount = 0;
+        counter.innerText = `Safe: 0 | Boom: 0`;
+    }
+
+    if (boomCount >= 5) {
+        msg.innerText = "YOU LOSEEE 💀💀💀";
+        anim.className = "boom";
+
+        // تشغيل صوت الخسارة
+        loseSound.play();
+
+        // إعادة العدّاد
+        safeCount = 0;
+        boomCount = 0;
+        counter.innerText = `Safe: 0 | Boom: 0`;
+    }
+}
+</script>
+</body>
+</html>
